@@ -1,0 +1,44 @@
+import random
+
+def alpha_beta_pruning_rps(current_depth, max_depth, alpha, beta, is_maximizing_player):
+    if current_depth == max_depth:
+        return evaluate_game_state()
+
+    if is_maximizing_player:
+        value = -float('inf')
+        for move in ["Rock", "Paper", "Scissors"]:
+            value = max(value, alpha_beta_pruning_rps(current_depth + 1, max_depth, alpha, beta, False))
+            alpha = max(alpha, value)
+            if beta <= alpha:
+                break
+    else:
+        value = float('inf')
+        for move in ["Rock", "Paper", "Scissors"]:
+            value = min(value, alpha_beta_pruning_rps(current_depth + 1, max_depth, alpha, beta, True))
+            beta = min(beta, value)
+            if beta <= alpha:
+                break
+
+    return value
+
+def evaluate_game_state():
+    # Evaluación basada en el resultado de una partida ficticia
+    player1_move = random.choice(["Rock", "Paper", "Scissors"])
+    player2_move = random.choice(["Rock", "Paper", "Scissors"])
+
+    # Asignar valores para victoria, derrota o empate
+    if player1_move == player2_move:
+        return 0  # Empate
+    elif (
+        (player1_move == "Rock" and player2_move == "Scissors") or
+        (player1_move == "Scissors" and player2_move == "Paper") or
+        (player1_move == "Paper" and player2_move == "Rock")
+    ):
+        return 1  # Victoria
+    else:
+        return -1  # Derrota
+
+# Ejemplo de uso
+max_depth = 3
+result = alpha_beta_pruning_rps(0, max_depth, -float('inf'), float('inf'), True)
+print("Resultado de la estrategia optimizada:", result)
